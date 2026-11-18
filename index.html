@@ -1,0 +1,1683 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>იავნანამ რა ჰქმნა?! — იაკობ გოგებაშვილი</title>
+    <!-- ქართული კლასიკური შრიფტები -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Georgian:wght@400;600;700&family=Noto+Sans+Georgian:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --parchment-light: #f7eedc;
+            --parchment-mid: #ead7b7;
+            --parchment-dark: #d2b48c;
+            --ink-brown: #3a2312;
+            --ink-soft: #5c3a21;
+            --pomegranate-red: #8e1e20;
+            --gold-accent: #c59b27;
+            --violet-ia: #5b437a;
+            --leaf-green: #3c5a32;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: #26170c;
+            background-image: radial-gradient(circle at center, #3b2414 0%, #1c1008 100%);
+            font-family: 'Noto Serif Georgian', Georgia, serif;
+            color: var(--ink-brown);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            overflow-x: hidden;
+        }
+
+        /* ძველი წიგნის / ეტრატის ჩარჩო */
+        .book-container {
+            position: relative;
+            width: 100%;
+            max-width: 960px;
+            background: var(--parchment-light);
+            background-image: 
+                radial-gradient(rgba(139, 90, 43, 0.08) 1px, transparent 0),
+                radial-gradient(rgba(139, 90, 43, 0.05) 1px, transparent 0),
+                linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(210,180,140,0.3) 100%);
+            background-size: 24px 24px, 12px 12px, 100% 100%;
+            background-position: 0 0, 12px 12px, 0 0;
+            border: 6px double var(--ink-brown);
+            border-radius: 14px;
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.75),
+                inset 0 0 60px rgba(138, 94, 50, 0.35);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* ქართული ორნამენტული კუთხეები */
+        .ornament-corner {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            pointer-events: none;
+            z-index: 10;
+            opacity: 0.75;
+        }
+        .top-left { top: 6px; left: 6px; }
+        .top-right { top: 6px; right: 6px; transform: rotate(90deg); }
+        .bottom-right { bottom: 6px; right: 6px; transform: rotate(180deg); }
+        .bottom-left { bottom: 6px; left: 6px; transform: rotate(270deg); }
+
+        /* ზედა პანელი: დედა ენის დღიური და ხმის კონტროლი */
+        .header-bar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid rgba(58, 35, 18, 0.25);
+            padding-bottom: 10px;
+            gap: 10px;
+        }
+
+        .title-area h1 {
+            font-size: clamp(1.1rem, 2.5vw, 1.55rem);
+            color: var(--pomegranate-red);
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.6);
+        }
+
+        .title-area p {
+            font-size: 0.8rem;
+            color: var(--ink-soft);
+            font-style: italic;
+        }
+
+        /* დედა ენის სიტყვების საგანძური */
+        .deda-ena-journal {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(234, 215, 183, 0.7);
+            border: 1px solid rgba(92, 58, 33, 0.35);
+            border-radius: 10px;
+            padding: 6px 10px;
+            flex-wrap: wrap;
+        }
+
+        .journal-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--ink-brown);
+            margin-right: 4px;
+        }
+
+        .word-badge {
+            font-size: 0.78rem;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(58, 35, 18, 0.08);
+            color: rgba(58, 35, 18, 0.4);
+            border: 1px dashed rgba(58, 35, 18, 0.3);
+            transition: all 0.4s ease;
+        }
+
+        .word-badge.unlocked {
+            background: var(--pomegranate-red);
+            color: #fff8eb;
+            border: 1px solid var(--gold-accent);
+            box-shadow: 0 2px 6px rgba(142, 30, 32, 0.35);
+            transform: scale(1.04);
+        }
+
+        .word-badge.faded {
+            background: #7b848f;
+            color: #e2e8f0;
+            border: 1px solid #475569;
+            text-decoration: line-through;
+            opacity: 0.75;
+        }
+
+        .controls-area {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            background: var(--parchment-mid);
+            border: 1.5px solid var(--ink-brown);
+            color: var(--ink-brown);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 0 var(--ink-brown);
+        }
+
+        .btn-icon:hover {
+            background: #e2c699;
+            transform: translateY(-1px);
+        }
+
+        .btn-icon:active {
+            transform: translateY(1px);
+            box-shadow: none;
+        }
+
+        /* ტილოს (Canvas) კონტეინერი */
+        .canvas-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            max-height: 520px;
+            border: 3px solid var(--ink-brown);
+            border-radius: 10px;
+            overflow: hidden;
+            background: #e6d3b3;
+            box-shadow: inset 0 0 25px rgba(40, 20, 5, 0.4);
+            touch-action: none;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* ინტერაქტიული მოდალური/თხრობითი ფენა ტილოზე */
+        .story-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(34, 19, 9, 0.82);
+            backdrop-filter: blur(3px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 20;
+            transition: opacity 0.4s ease;
+        }
+
+        .story-overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .story-card {
+            background: var(--parchment-light);
+            background-image: radial-gradient(rgba(139, 90, 43, 0.08) 1px, transparent 0);
+            background-size: 16px 16px;
+            border: 3px double var(--pomegranate-red);
+            border-radius: 12px;
+            max-width: 650px;
+            width: 100%;
+            padding: 22px 26px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+            max-height: 92%;
+            overflow-y: auto;
+        }
+
+        .chapter-tag {
+            display: inline-block;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--pomegranate-red);
+            border-bottom: 1px solid var(--pomegranate-red);
+            padding-bottom: 2px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .story-card h2 {
+            font-size: clamp(1.25rem, 3vw, 1.7rem);
+            color: var(--ink-brown);
+            margin-bottom: 12px;
+        }
+
+        .story-text {
+            font-size: clamp(0.9rem, 2vw, 1.02rem);
+            line-height: 1.65;
+            color: var(--ink-soft);
+            margin-bottom: 16px;
+            text-align: justify;
+            text-align-last: center;
+        }
+
+        .gogebashvili-quote {
+            background: rgba(210, 180, 140, 0.35);
+            border-left: 4px solid var(--pomegranate-red);
+            border-right: 4px solid var(--pomegranate-red);
+            padding: 10px 14px;
+            margin: 12px 0 18px;
+            font-style: italic;
+            font-size: 0.92rem;
+            color: var(--ink-brown);
+            border-radius: 6px;
+        }
+
+        .instruction-box {
+            background: rgba(91, 67, 122, 0.1);
+            border: 1px solid rgba(91, 67, 122, 0.35);
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+            color: #3d2856;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(180deg, #a62629 0%, #7a1719 100%);
+            color: #fffaf0;
+            border: 2px solid #d9b25f;
+            border-radius: 10px;
+            padding: 11px 26px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(122, 23, 25, 0.45);
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(122, 23, 25, 0.6);
+            background: linear-gradient(180deg, #b82b2e 0%, #8a1a1c 100%);
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        /* ქვედა მთხრობელის ზოლი და მობილური კონტროლები */
+        .bottom-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .narrator-bar {
+            background: rgba(234, 215, 183, 0.85);
+            border: 1.5px solid rgba(58, 35, 18, 0.3);
+            border-radius: 8px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            min-height: 52px;
+        }
+
+        .narrator-text {
+            font-size: 0.92rem;
+            color: var(--ink-brown);
+            line-height: 1.4;
+        }
+
+        .progress-pill {
+            white-space: nowrap;
+            background: var(--ink-brown);
+            color: var(--parchment-light);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        /* III თავის ინტერაქტიული სიტყვების ასარჩევი ღილაკები */
+        .lullaby-choices {
+            display: none;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 4px 0;
+        }
+
+        .lullaby-choices.active {
+            display: flex;
+        }
+
+        .choice-btn {
+            background: var(--parchment-mid);
+            border: 2px solid var(--pomegranate-red);
+            color: var(--ink-brown);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+        }
+
+        .choice-btn:hover {
+            background: var(--pomegranate-red);
+            color: #fff;
+            transform: scale(1.05);
+        }
+
+        /* სენსორული მართვის ღილაკები მობილურისთვის */
+        .touch-controls {
+            display: none;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .touch-controls {
+                display: flex;
+            }
+            .book-container {
+                padding: 10px;
+            }
+            .canvas-wrapper {
+                aspect-ratio: 4 / 3;
+            }
+        }
+
+        .dpad-btn {
+            width: 52px;
+            height: 44px;
+            background: var(--parchment-mid);
+            border: 2px solid var(--ink-brown);
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--ink-brown);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 0 var(--ink-brown);
+        }
+        .dpad-btn:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="book-container">
+    <!-- ქართული ვაზისა და ბორჯღალის სტილიზებული კუთხის ორნამენტები -->
+    <svg class="ornament-corner top-left" viewBox="0 0 50 50">
+        <path d="M4,46 L4,14 Q4,4 14,4 L46,4" fill="none" stroke="#8e1e20" stroke-width="3"/>
+        <path d="M10,40 L10,18 Q10,10 18,10 L40,10" fill="none" stroke="#c59b27" stroke-width="1.5"/>
+        <circle cx="14" cy="14" r="4" fill="#8e1e20"/>
+    </svg>
+    <svg class="ornament-corner top-right" viewBox="0 0 50 50">
+        <path d="M4,46 L4,14 Q4,4 14,4 L46,4" fill="none" stroke="#8e1e20" stroke-width="3"/>
+        <path d="M10,40 L10,18 Q10,10 18,10 L40,10" fill="none" stroke="#c59b27" stroke-width="1.5"/>
+        <circle cx="14" cy="14" r="4" fill="#8e1e20"/>
+    </svg>
+    <svg class="ornament-corner bottom-right" viewBox="0 0 50 50">
+        <path d="M4,46 L4,14 Q4,4 14,4 L46,4" fill="none" stroke="#8e1e20" stroke-width="3"/>
+        <path d="M10,40 L10,18 Q10,10 18,10 L40,10" fill="none" stroke="#c59b27" stroke-width="1.5"/>
+        <circle cx="14" cy="14" r="4" fill="#8e1e20"/>
+    </svg>
+    <svg class="ornament-corner bottom-left" viewBox="0 0 50 50">
+        <path d="M4,46 L4,14 Q4,4 14,4 L46,4" fill="none" stroke="#8e1e20" stroke-width="3"/>
+        <path d="M10,40 L10,18 Q10,10 18,10 L40,10" fill="none" stroke="#c59b27" stroke-width="1.5"/>
+        <circle cx="14" cy="14" r="4" fill="#8e1e20"/>
+    </svg>
+
+    <!-- ზედა პანელი -->
+    <header class="header-bar">
+        <div class="title-area">
+            <h1>იავნანამ რა ჰქმნა?!</h1>
+            <p>იაკობ გოგებაშვილის მოთხრობის მიხედვით</p>
+        </div>
+
+        <!-- დედა ენის საგანძური -->
+        <div class="deda-ena-journal" id="journalContainer">
+            <span class="journal-label">📖 დედა ენა:</span>
+            <span class="word-badge" data-word="აი ია">აი ია</span>
+            <span class="word-badge" data-word="დედა">დედა</span>
+            <span class="word-badge" data-word="მამა">მამა</span>
+            <span class="word-badge" data-word="კახეთი">კახეთი</span>
+            <span class="word-badge" data-word="სამშობლო">სამშობლო</span>
+            <span class="word-badge" data-word="იავნანა">იავნანა</span>
+        </div>
+
+        <div class="controls-area">
+            <button class="btn-icon" id="soundToggleBtn" title="ხმის ჩართვა/გამორთვა">
+                <span id="soundIcon">🔊</span> <span id="soundLabel">ჰანგი</span>
+            </button>
+            <button class="btn-icon" id="restartBtn" title="თავიდან დაწყება">
+                ↺ თავიდან
+            </button>
+        </div>
+    </header>
+
+    <!-- მთავარი სათამაშო ტილო -->
+    <div class="canvas-wrapper" id="canvasContainer">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- თხრობითი და საწყისი ფანჯარა -->
+        <div class="story-overlay" id="storyOverlay">
+            <div class="story-card">
+                <div class="chapter-tag" id="modalChapter">იაკობ გოგებაშვილი • 1890</div>
+                <h2 id="modalTitle">იავნანამ რა ჰქმნა?!</h2>
+                <p class="story-text" id="modalText">
+                    კახეთის ერთ მშვენიერ სოფელში, ვაშლობანში, ცხოვრობდა პატარა ქეთო თავის მოსიყვარულე მშობლებთან — ზურაბთან და მაგდანასთან ერთად. ეს არის ამბავი დედაენის უკვდავ ძალაზე, სამშობლოს სიყვარულსა და დედის ნამღერ „იავნანაზე“, რომელმაც გაყინული მეხსიერება გაალღო.
+                </p>
+                <div class="gogebashvili-quote" id="modalQuote">
+                    „დედაენა არის სული და გული ერისა; მისი დავიწყება საკუთარი თავის დავიწყებაა.“
+                </div>
+                <div class="instruction-box" id="modalInstruction">
+                    მართვა: გამოიყენეთ ისრები (← ↑ ↓ →), W A S D ან შეეხეთ ეკრანს ქეთოს სამართავად.
+                </div>
+                <button class="btn-primary" id="modalActionBtn">მოთხრობის დაწყება</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ქვედა პანელი -->
+    <div class="bottom-panel">
+        <!-- III თავის სპეციალური სიტყვების პანელი -->
+        <div class="lullaby-choices" id="lullabyChoices"></div>
+
+        <div class="narrator-bar">
+            <div class="narrator-text" id="narratorText">
+                კეთილი იყოს თქვენი მობრძანება იაკობ გოგებაშვილის სამყაროში...
+            </div>
+            <div class="progress-pill" id="progressPill">პროლოგი</div>
+        </div>
+
+        <!-- მობილური ღილაკები -->
+        <div class="touch-controls" id="touchControls">
+            <button class="dpad-btn" data-dir="left">◀</button>
+            <button class="dpad-btn" data-dir="up">▲</button>
+            <button class="dpad-btn" data-dir="down">▼</button>
+            <button class="dpad-btn" data-dir="right">▶</button>
+        </div>
+    </div>
+</div>
+
+<script>
+/**
+ * ============================================================================
+ * „იავნანამ რა ჰქმნა?!“ — ინტერაქტიული ლიტერატურული თამაში
+ * ავტორი: იაკობ გოგებაშვილის მოთხრობის მოტივებზე
+ * ============================================================================
+ */
+
+// --- აუდიო სინთეზატორი (Web Audio API - ქართული „იავნანას“ მოტივი) ---
+class GeorgianLullabyAudio {
+    constructor() {
+        this.ctx = null;
+        this.isMuted = false;
+        this.isPlayingMelody = false;
+        this.melodyTimer = null;
+        this.step = 0;
+
+        // ქართული „იავნანას“ ნაზი, პოლიფონიური შთაგონების მელოდია (Hz)
+        // ტრადიციული კახური „იავნანა, ვარდოვ ნანა“ მოტივი
+        this.iavnanaNotes = [
+            { freq: 329.63, bass: 164.81, dur: 0.7 }, // E4 - ი-
+            { freq: 392.00, bass: 196.00, dur: 0.7 }, // G4 - ავ-
+            { freq: 369.99, bass: 185.00, dur: 0.7 }, // F#4 - ნა-
+            { freq: 329.63, bass: 164.81, dur: 1.1 }, // E4 - ნა...
+            { freq: 392.00, bass: 196.00, dur: 0.7 }, // G4 - ვარ-
+            { freq: 440.00, bass: 220.00, dur: 0.7 }, // A4 - დოვ
+            { freq: 392.00, bass: 196.00, dur: 0.7 }, // G4 - ნა-
+            { freq: 369.99, bass: 185.00, dur: 1.1 }, // F#4 - ნა...
+            { freq: 369.99, bass: 146.83, dur: 0.7 }, // F#4 - ი-
+            { freq: 329.63, bass: 164.81, dur: 0.7 }, // E4 - ავ-
+            { freq: 293.66, bass: 146.83, dur: 0.7 }, // D4 - ნა-
+            { freq: 329.63, bass: 164.81, dur: 1.4 }  // E4 - ნინაო...
+        ];
+    }
+
+    init() {
+        if (!this.ctx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            this.ctx = new AudioCtx();
+        }
+        if (this.ctx.state === 'suspended') {
+            this.ctx.resume();
+        }
+    }
+
+    toggleMute() {
+        this.isMuted = !this.isMuted;
+        return this.isMuted;
+    }
+
+    playTone(freq, duration = 0.4, type = 'sine', volume = 0.12) {
+        if (this.isMuted) return;
+        this.init();
+
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, now);
+
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.exponentialRampToValueAtTime(volume, now + 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+
+        osc.start(now);
+        osc.stop(now + duration + 0.05);
+    }
+
+    playCollectSound() {
+        // თბილი ჩონგურისებრი აკორდი
+        this.playTone(440, 0.45, 'triangle', 0.13);
+        setTimeout(() => this.playTone(554.37, 0.5, 'sine', 0.1), 80);
+        setTimeout(() => this.playTone(659.25, 0.6, 'sine', 0.09), 160);
+    }
+
+    playFadeSound() {
+        // სევდიანი დაღმავალი ბგერა
+        this.playTone(329.63, 0.4, 'sine', 0.08);
+        setTimeout(() => this.playTone(261.63, 0.5, 'sine', 0.06), 140);
+    }
+
+    playDangerSound() {
+        this.playTone(146.83, 0.35, 'sawtooth', 0.07);
+    }
+
+    startLullaby(tempoMultiplier = 1.0) {
+        if (this.isPlayingMelody) return;
+        this.isPlayingMelody = true;
+        this.step = 0;
+
+        const playNext = () => {
+            if (!this.isPlayingMelody) return;
+            const note = this.iavnanaNotes[this.step % this.iavnanaNotes.length];
+            const dur = note.dur * tempoMultiplier;
+
+            if (!this.isMuted) {
+                // მთავარი ხმა (დედის სიმღერა)
+                this.playTone(note.freq, dur * 1.1, 'sine', 0.11);
+                // ქართული ბანი (მეორე ხმა / ბურდონი)
+                this.playTone(note.bass, dur * 1.2, 'triangle', 0.06);
+            }
+
+            this.step++;
+            this.melodyTimer = setTimeout(playNext, dur * 850);
+        };
+
+        playNext();
+    }
+
+    stopLullaby() {
+        this.isPlayingMelody = false;
+        if (this.melodyTimer) {
+            clearTimeout(this.melodyTimer);
+            this.melodyTimer = null;
+        }
+    }
+}
+
+// --- თამაშის მთავარი ძრავა ---
+class IavnanaGame {
+    constructor() {
+        this.canvas = document.getElementById('gameCanvas');
+        this.ctx = this.canvas.getContext('2d');
+        this.audio = new GeorgianLullabyAudio();
+
+        // UI ელემენტები
+        this.overlay = document.getElementById('storyOverlay');
+        this.modalChapter = document.getElementById('modalChapter');
+        this.modalTitle = document.getElementById('modalTitle');
+        this.modalText = document.getElementById('modalText');
+        this.modalQuote = document.getElementById('modalQuote');
+        this.modalInstruction = document.getElementById('modalInstruction');
+        this.modalActionBtn = document.getElementById('modalActionBtn');
+        this.narratorText = document.getElementById('narratorText');
+        this.progressPill = document.getElementById('progressPill');
+        this.lullabyChoices = document.getElementById('lullabyChoices');
+
+        // სათამაშო მდგომარეობა
+        this.state = 'PROLOGUE'; // PROLOGUE, CH1, CH2, CH3, EPILOGUE
+        this.isPaused = true;
+        this.lastTime = 0;
+        this.animTime = 0;
+
+        // დედა ენის სიტყვების სტატუსი
+        this.wordsStatus = {
+            'აი ია': 'locked',
+            'დედა': 'locked',
+            'მამა': 'locked',
+            'კახეთი': 'locked',
+            'სამშობლო': 'locked',
+            'იავნანა': 'locked'
+        };
+
+        // მოთამაშის (ქეთოს) პარამეტრები
+        this.player = {
+            x: 0.2,
+            y: 0.65,
+            vx: 0,
+            vy: 0,
+            speed: 0.36,
+            radius: 22,
+            targetX: null,
+            targetY: null,
+            isAdult: false
+        };
+
+        // კლავიატურა
+        this.keys = {};
+
+        // თავების სპეციფიკური ობიექტები
+        this.items = [];
+        this.enemies = [];
+        this.particles = [];
+        this.floatingNotes = [];
+        this.ch1Collected = 0;
+        this.ch2Timer = 0;
+        this.ch2Duration = 24; // 24 წამი გატაცებისა და მეხსიერების გაფერმკრთალების სცენა
+        this.ch2FadedCount = 0;
+        this.memoryMeter = 0; // 0-დან 100-მდე III თავში
+        this.activeTargetWord = null;
+
+        this.bindEvents();
+        this.resizeCanvas();
+        this.setupPrologue();
+    }
+
+    bindEvents() {
+        window.addEventListener('resize', () => this.resizeCanvas());
+
+        window.addEventListener('keydown', (e) => {
+            this.keys[e.key.toLowerCase()] = true;
+            if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(e.key.toLowerCase())) {
+                e.preventDefault();
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            this.keys[e.key.toLowerCase()] = false;
+        });
+
+        // ტილოზე დაწკაპუნება / შეხება
+        const handlePointer = (clientX, clientY) => {
+            if (this.isPaused) return;
+            this.audio.init();
+            const rect = this.canvas.getBoundingClientRect();
+            const nx = (clientX - rect.left) / rect.width;
+            const ny = (clientY - rect.top) / rect.height;
+
+            if (this.state === 'CH1' || this.state === 'CH2') {
+                this.player.targetX = Math.max(0.06, Math.min(0.94, nx));
+                this.player.targetY = Math.max(0.25, Math.min(0.92, ny));
+            } else if (this.state === 'CH3') {
+                this.handleCh3Click(nx, ny);
+            }
+        };
+
+        this.canvas.addEventListener('mousedown', (e) => handlePointer(e.clientX, e.clientY));
+        this.canvas.addEventListener('touchstart', (e) => {
+            if (e.touches.length > 0) {
+                handlePointer(e.touches[0].clientX, e.touches[0].clientY);
+            }
+        }, { passive: true });
+
+        // მობილური D-pad ღილაკები
+        document.querySelectorAll('.dpad-btn').forEach(btn => {
+            const dir = btn.dataset.dir;
+            const keyMap = { left: 'arrowleft', right: 'arrowright', up: 'arrowup', down: 'arrowdown' };
+            btn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.keys[keyMap[dir]] = true;
+            });
+            btn.addEventListener('touchend', (e) => {
+                e.preventDefault();
+                this.keys[keyMap[dir]] = false;
+            });
+            btn.addEventListener('mousedown', () => this.keys[keyMap[dir]] = true);
+            btn.addEventListener('mouseup', () => this.keys[keyMap[dir]] = false);
+        });
+
+        // ხმის ღილაკი
+        document.getElementById('soundToggleBtn').addEventListener('click', () => {
+            const muted = this.audio.toggleMute();
+            document.getElementById('soundIcon').textContent = muted ? '🔇' : '🔊';
+            document.getElementById('soundLabel').textContent = muted ? 'უხმო' : 'ჰანგი';
+        });
+
+        // თავიდან დაწყება
+        document.getElementById('restartBtn').addEventListener('click', () => {
+            this.audio.stopLullaby();
+            this.resetAllWords();
+            this.setupPrologue();
+        });
+    }
+
+    resizeCanvas() {
+        const container = document.getElementById('canvasContainer');
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        this.canvas.width = container.clientWidth * dpr;
+        this.canvas.height = container.clientHeight * dpr;
+        this.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        this.width = container.clientWidth;
+        this.height = container.clientHeight;
+    }
+
+    updateWordBadge(word, status) {
+        this.wordsStatus[word] = status;
+        const badge = document.querySelector(`.word-badge[data-word="${word}"]`);
+        if (!badge) return;
+        badge.classList.remove('unlocked', 'faded');
+        if (status === 'unlocked') {
+            badge.classList.add('unlocked');
+        } else if (status === 'faded') {
+            badge.classList.add('faded');
+        }
+    }
+
+    resetAllWords() {
+        Object.keys(this.wordsStatus).forEach(w => this.updateWordBadge(w, 'locked'));
+    }
+
+    showModal({ chapter, title, text, quote, instruction, btnText, onStart }) {
+        this.isPaused = true;
+        this.modalChapter.textContent = chapter;
+        this.modalTitle.textContent = title;
+        this.modalText.textContent = text;
+        
+        if (quote) {
+            this.modalQuote.textContent = quote;
+            this.modalQuote.style.display = 'block';
+        } else {
+            this.modalQuote.style.display = 'none';
+        }
+
+        if (instruction) {
+            this.modalInstruction.textContent = instruction;
+            this.modalInstruction.style.display = 'block';
+        } else {
+            this.modalInstruction.style.display = 'none';
+        }
+
+        this.modalActionBtn.textContent = btnText;
+        this.overlay.classList.remove('hidden');
+
+        this.modalActionBtn.onclick = () => {
+            this.audio.init();
+            this.overlay.classList.add('hidden');
+            this.isPaused = false;
+            if (onStart) onStart();
+        };
+    }
+
+    // =========================================================================
+    // პროლოგი
+    // =========================================================================
+    setupPrologue() {
+        this.state = 'PROLOGUE';
+        this.lullabyChoices.classList.remove('active');
+        this.progressPill.textContent = 'პროლოგი';
+        this.narratorText.textContent = 'იაკობ გოგებაშვილი — „იავნანამ რა ჰქმნა?!“';
+
+        this.showModal({
+            chapter: 'იაკობ გოგებაშვილი • 1890',
+            title: 'იავნანამ რა ჰქმნა?!',
+            text: 'კახეთის ერთ მშვენიერ სოფელში, ვაშლობანში, ცხოვრობდა პატარა ქეთო თავის მოსიყვარულე მშობლებთან — ზურაბთან და მაგდანასთან ერთად. ეს არის უკვდავი ამბავი დედაენის ძალაზე, სამშობლოს სიყვარულსა და დედის ნამღერ „იავნანაზე“, რომელმაც გაყინული მეხსიერება გაალღო.',
+            quote: '„დედაენა არის სული და გული ერისა; მისი დავიწყება საკუთარი თავის დავიწყებაა.“',
+            instruction: 'მართვა: ისრები (← ↑ ↓ →), W A S D ან ეკრანზე შეხება.',
+            btnText: 'თავი I: ბავშვობა კახეთში',
+            onStart: () => this.startChapter1()
+        });
+    }
+
+    // =========================================================================
+    // თავი I: ბავშვობა კახეთში
+    // =========================================================================
+    startChapter1() {
+        this.state = 'CH1';
+        this.player.x = 0.25;
+        this.player.y = 0.72;
+        this.player.targetX = null;
+        this.player.targetY = null;
+        this.player.isAdult = false;
+        this.ch1Collected = 0;
+        this.particles = [];
+
+        this.audio.startLullaby(1.1);
+
+        // კახეთის ეზოში შესაგროვებელი 5 წმინდა მოგონება / სიტყვა
+        const ch1Words = [
+            { word: 'აი ია', icon: '🌸', x: 0.45, y: 0.62, desc: 'პირველი ია კახეთის მინდორზე — „აი ია“!' },
+            { word: 'დედა', icon: '🧶', x: 0.72, y: 0.55, desc: 'დედა მაგდანას თბილი ხელები და ალერსი.' },
+            { word: 'მამა', icon: '🍇', x: 0.82, y: 0.80, desc: 'მამა ზურაბის ვენახი და მწიფე ბროწეული.' },
+            { word: 'კახეთი', icon: '🍎', x: 0.30, y: 0.85, desc: 'მშობლიური სოფელი ვაშლობანი და ალაზნის ველი.' },
+            { word: 'სამშობლო', icon: '☀️', x: 0.60, y: 0.78, desc: 'მზიანი საქართველო — ქეთოს გულის ფესვი.' }
+        ];
+
+        this.items = ch1Words.map((item, idx) => ({
+            ...item,
+            collected: false,
+            bobOffset: idx * 1.3
+        }));
+
+        this.progressPill.textContent = 'თავი I: 0 / 5';
+        this.narratorText.textContent = 'დაეხმარე პატარა ქეთოს კახეთის ეზოში ყვავილებისა და „დედა ენის“ სიტყვების შეგროვებაში.';
+    }
+
+    // =========================================================================
+    // თავი II: გატაცება და დავიწყება
+    // =========================================================================
+    startChapter2() {
+        this.state = 'CH2';
+        this.audio.stopLullaby();
+
+        this.showModal({
+            chapter: 'თავი II • მწარე განშორება',
+            title: 'გატაცება და ნისლში გაფანტული სიტყვები',
+            text: 'ერთ საბედისწერო დღეს, როცა ქეთო ეზოში თამაშობდა, ორმა ლეკმა იგი მოიტაცა და კავკასიონის ციცაბო მთებით დაღესტანში, სოფელ ჩოხში წაიყვანა. გავიდა წლები... უცხო გარემოში ქეთოს თანდათან ავიწყდებოდა ქართული სიტყვები.',
+            quote: '„დრომ და უცხოობამ თანდათან წაშალა პატარა ქეთოს გონებიდან მშობლიური კერა, დედის სახე და ქართული ენა...“',
+            instruction: 'აარიდე თავი მდევრების ჩრდილებს და შეეცადე დაიჭირო ჰაერში გაფრენილი ქართული სიტყვები, სანამ ნისლად იქცევიან!',
+            btnText: 'გზა კავკასიონზე',
+            onStart: () => {
+                this.player.x = 0.2;
+                this.player.y = 0.6;
+                this.player.targetX = null;
+                this.player.targetY = null;
+                this.ch2Timer = 0;
+                this.ch2FadedCount = 0;
+                this.items = [];
+                this.enemies = [
+                    { x: 0.85, y: 0.35, vx: -0.14, vy: 0.08, r: 24 },
+                    { x: 0.90, y: 0.78, vx: -0.12, vy: -0.09, r: 24 }
+                ];
+
+                // სიტყვები, რომლებიც სათითაოდ მიფრინავენ და ნისლდებიან
+                const fadingWords = ['აი ია', 'კახეთი', 'მამა', 'სამშობლო', 'დედა'];
+                fadingWords.forEach((w, i) => {
+                    this.items.push({
+                        word: w,
+                        x: 0.45 + (i % 3) * 0.2,
+                        y: 0.35 + (i % 2) * 0.35,
+                        vy: -0.025,
+                        alpha: 1.0,
+                        spawnDelay: i * 3.5,
+                        active: false,
+                        faded: false
+                    });
+                });
+
+                this.progressPill.textContent = 'თავი II: გზა უცხოეთისკენ';
+                this.narratorText.textContent = 'შორს რჩება კახეთი... შეეცადე შეინარჩუნო მშობლიური სიტყვები!';
+            }
+        });
+    }
+
+    // =========================================================================
+    // თავი III: იავნანას ძალა (კულმინაცია დაღესტანში)
+    // =========================================================================
+    startChapter3() {
+        this.state = 'CH3';
+        this.lullabyChoices.classList.add('active');
+
+        // ყველა სიტყვა დროებით მიძინებულია გონებაში
+        Object.keys(this.wordsStatus).forEach(w => this.updateWordBadge(w, 'faded'));
+
+        this.showModal({
+            chapter: 'თავი III • სასწაული ჩოხში',
+            title: 'იავნანას უკვდავი ძალა',
+            text: 'გავიდა წლები. ზურაბმა და მაგდანამ მიაგნეს გაზრდილ ქეთოს დაღესტანში, მაგრამ ქეთო ვეღარ ცნობდა მშობლებს — იგი სრულიად გაუცხოებული იყო. მაშინ სასოწარკვეთილმა მაგდანამ ჩამოჯდა და დაიწყო თავისი ძველი, ტკბილი „იავნანა“...',
+            quote: '„იავნანა, ვარდოვ ნანა, იავნანინაო...“ — ამ ჰანგმა შეარხია ქეთოს გულის სიღრმეში ჩამარხული ბავშვობის სიზმარი.',
+            instruction: 'დააჭირე მანათობელ მუსიკალურ ნოტებსა და გამოღვიძებულ ქართულ სიტყვებს, რათა ქეთოს მეხსიერება 100%-მდე გაცოცხლდეს!',
+            btnText: 'მოუსმინე „იავნანას“',
+            onStart: () => {
+                this.player.isAdult = true;
+                this.memoryMeter = 0;
+                this.floatingNotes = [];
+                this.particles = [];
+                this.audio.startLullaby(1.0);
+                this.setupCh3Choices();
+                this.progressPill.textContent = 'მეხსიერება: 0%';
+                this.narratorText.textContent = 'მაგდანა მღერის: „იავნანა, ვარდოვ ნანა...“ დაიჭირე მანათობელი ნოტები და გაიხსენე სიტყვები!';
+            }
+        });
+    }
+
+    setupCh3Choices() {
+        const wordsOrder = ['აი ია', 'კახეთი', 'მამა', 'სამშობლო', 'დედა', 'იავნანა'];
+        this.lullabyChoices.innerHTML = '';
+
+        wordsOrder.forEach(word => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            btn.textContent = `✨ ${word}`;
+            btn.onclick = () => {
+                if (this.wordsStatus[word] === 'unlocked') return;
+                this.audio.playCollectSound();
+                this.updateWordBadge(word, 'unlocked');
+                btn.style.background = '#3c5a32';
+                btn.style.color = '#fff';
+                btn.style.borderColor = '#c59b27';
+                btn.disabled = true;
+
+                this.memoryMeter = Math.min(100, this.memoryMeter + 14);
+                this.spawnBurst(0.68, 0.58, '#c59b27', 22);
+                this.narratorText.textContent = `ქეთოს თვალწინ გაცოცხლდა: „${word}“! გული უცემს მშობლიური სითბოთი...`;
+                this.checkCh3Completion();
+            };
+            this.lullabyChoices.appendChild(btn);
+        });
+    }
+
+    handleCh3Click(nx, ny) {
+        // შემოწმება მფრინავ მუსიკალურ ნოტებზე
+        for (let i = this.floatingNotes.length - 1; i >= 0; i--) {
+            const n = this.floatingNotes[i];
+            const dist = Math.hypot(nx - n.x, ny - n.y);
+            if (dist < 0.08) {
+                this.audio.playCollectSound();
+                this.spawnBurst(n.x, n.y, '#8e1e20', 16);
+                this.floatingNotes.splice(i, 1);
+                this.memoryMeter = Math.min(100, this.memoryMeter + 5);
+                this.checkCh3Completion();
+                return;
+            }
+        }
+    }
+
+    checkCh3Completion() {
+        this.progressPill.textContent = `მეხსიერება: ${Math.round(this.memoryMeter)}%`;
+        const allUnlocked = Object.values(this.wordsStatus).every(s => s === 'unlocked');
+        if (this.memoryMeter >= 100 && allUnlocked) {
+            setTimeout(() => this.startEpilogue(), 900);
+        } else if (this.memoryMeter >= 100 && !allUnlocked) {
+            this.narratorText.textContent = 'მეხსიერება თითქმის სრულია! გააღვიძე დარჩენილი ქართული სიტყვებიც ქვემოთ.';
+        }
+    }
+
+    // =========================================================================
+    // ეპილოგი
+    // =========================================================================
+    startEpilogue() {
+        this.state = 'EPILOGUE';
+        this.lullabyChoices.classList.remove('active');
+        this.progressPill.textContent = 'ეპილოგი • დაბრუნება';
+        this.narratorText.textContent = '„დედა, დედილო!“ — წამოიძახა ქეთომ და მშობლებს გადაეხვია.';
+
+        this.showModal({
+            chapter: 'ეპილოგი • დედაენის გამარჯვება',
+            title: '„დედა, დედილო!“',
+            text: 'უცებ ქეთოს სახე გაუნათდა, თვალებიდან ცრემლები წასკდა, წამოვარდა, მოეხვია მაგდანას და ქართულად შესძახა: „დედა, დედილო!“. იავნანამ გააკეთა ის, რაც ვერ შეძლო ვერც შეგონებამ და ვერც ძალამ — მან გააღვიძა სისხლი, ენა და სამშობლოს სიყვარული.',
+            quote: '„აი, რა ძალა აქვს დედის ნამღერ იავნანას და მშობლიურ ენას! იგი ადამიანის სულის უკვდავი ფესვია.“ — იაკობ გოგებაშვილი',
+            instruction: 'თქვენ წარმატებით გაიარეთ იაკობ გოგებაშვილის „იავნანამ რა ჰქმნა?!“ და აღადგინეთ დედა ენის ყველა სიტყვა.',
+            btnText: 'თავიდან თამაში',
+            onStart: () => {
+                this.audio.stopLullaby();
+                this.resetAllWords();
+                this.setupPrologue();
+            }
+        });
+    }
+
+    // =========================================================================
+    // განახლების ლოგიკა (Update Loop)
+    // =========================================================================
+    update(dt) {
+        this.animTime += dt;
+
+        // ნაწილაკების განახლება
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+            const p = this.particles[i];
+            p.x += p.vx * dt;
+            p.y += p.vy * dt;
+            p.life -= dt;
+            if (p.life <= 0) this.particles.splice(i, 1);
+        }
+
+        if (this.isPaused) return;
+
+        if (this.state === 'CH1') {
+            this.updatePlayerMovement(dt);
+            this.updateChapter1(dt);
+        } else if (this.state === 'CH2') {
+            this.updatePlayerMovement(dt);
+            this.updateChapter2(dt);
+        } else if (this.state === 'CH3') {
+            this.updateChapter3(dt);
+        }
+    }
+
+    updatePlayerMovement(dt) {
+        let dx = 0;
+        let dy = 0;
+
+        if (this.keys['arrowleft'] || this.keys['a'] || this.keys['ა']) dx -= 1;
+        if (this.keys['arrowright'] || this.keys['d'] || this.keys['დ']) dx += 1;
+        if (this.keys['arrowup'] || this.keys['w'] || this.keys['წ']) dy -= 1;
+        if (this.keys['arrowdown'] || this.keys['s'] || this.keys['ს']) dy += 1;
+
+        if (dx !== 0 || dy !== 0) {
+            this.player.targetX = null;
+            this.player.targetY = null;
+            const len = Math.hypot(dx, dy);
+            this.player.x += (dx / len) * this.player.speed * dt;
+            this.player.y += (dy / len) * this.player.speed * dt;
+        } else if (this.player.targetX !== null && this.player.targetY !== null) {
+            const tdx = this.player.targetX - this.player.x;
+            const tdy = this.player.targetY - this.player.y;
+            const dist = Math.hypot(tdx, tdy);
+            if (dist > 0.01) {
+                this.player.x += (tdx / dist) * this.player.speed * dt;
+                this.player.y += (tdy / dist) * this.player.speed * dt;
+            } else {
+                this.player.targetX = null;
+                this.player.targetY = null;
+            }
+        }
+
+        // საზღვრებში დატოვება
+        this.player.x = Math.max(0.06, Math.min(0.94, this.player.x));
+        this.player.y = Math.max(0.32, Math.min(0.92, this.player.y));
+    }
+
+    updateChapter1(dt) {
+        for (const item of this.items) {
+            if (item.collected) continue;
+            const dist = Math.hypot(this.player.x - item.x, this.player.y - item.y);
+            if (dist < 0.065) {
+                item.collected = true;
+                this.ch1Collected++;
+                this.audio.playCollectSound();
+                this.updateWordBadge(item.word, 'unlocked');
+                this.spawnBurst(item.x, item.y, '#c59b27', 18);
+                this.progressPill.textContent = `თავი I: ${this.ch1Collected} / 5`;
+                this.narratorText.textContent = `${item.icon} „${item.word}“ — ${item.desc}`;
+
+                if (this.ch1Collected >= 5) {
+                    setTimeout(() => this.startChapter2(), 1100);
+                }
+            }
+        }
+    }
+
+    updateChapter2(dt) {
+        this.ch2Timer += dt;
+        const remaining = Math.max(0, Math.ceil(this.ch2Duration - this.ch2Timer));
+        this.progressPill.textContent = `თავი II: ${remaining} წმ`;
+
+        // მდევრების მოძრაობა
+        for (const enemy of this.enemies) {
+            enemy.x += enemy.vx * dt;
+            enemy.y += enemy.vy * dt;
+
+            if (enemy.x < 0.12 || enemy.x > 0.92) enemy.vx *= -1;
+            if (enemy.y < 0.32 || enemy.y > 0.90) enemy.vy *= -1;
+
+            const dist = Math.hypot(this.player.x - enemy.x, this.player.y - enemy.y);
+            if (dist < 0.065) {
+                // შეჯახებისას ქეთო უკან იხევს
+                this.audio.playDangerSound();
+                this.player.x = Math.max(0.08, this.player.x - 0.12);
+                this.spawnBurst(this.player.x, this.player.y, '#475569', 12);
+                this.narratorText.textContent = 'ფრთხილად! ლეკები კავკასიონის ბილიკებით მიაქროლებენ პატარა ქეთოს...';
+            }
+        }
+
+        // გაფრენილი სიტყვების განახლება
+        for (const item of this.items) {
+            if (item.faded) continue;
+            if (this.ch2Timer >= item.spawnDelay) {
+                item.active = true;
+            }
+            if (!item.active) continue;
+
+            item.y += item.vy * dt;
+            item.alpha -= dt * 0.13;
+
+            // თუ ქეთო შეეხო სიტყვას, ცოტა ხნით კიდევ იცოცხლებს, მაგრამ მაინც ნისლდება
+            const dist = Math.hypot(this.player.x - item.x, this.player.y - item.y);
+            if (dist < 0.06 && item.alpha > 0.25) {
+                item.alpha = Math.min(1.0, item.alpha + dt * 0.25);
+                this.narratorText.textContent = `ქეთო ებღაუჭება სიტყვას „${item.word}“, მაგრამ გზა ძალიან შორია...`;
+            }
+
+            if (item.alpha <= 0) {
+                item.faded = true;
+                this.ch2FadedCount++;
+                this.audio.playFadeSound();
+                this.updateWordBadge(item.word, 'faded');
+                this.spawnBurst(item.x, item.y, '#94a3b8', 14);
+                this.narratorText.textContent = `სიტყვა „${item.word}“ ნისლში ჩაიკარგა...`;
+            }
+        }
+
+        if (this.ch2Timer >= this.ch2Duration) {
+            // დარჩენილი სიტყვების მიძინება
+            this.items.forEach(it => {
+                if (!it.faded) this.updateWordBadge(it.word, 'faded');
+            });
+            this.startChapter3();
+        }
+    }
+
+    updateChapter3(dt) {
+        // მუსიკალური ნოტების გენერაცია მაგდანადან ქეთოსკენ
+        if (Math.random() < dt * 1.4 && this.floatingNotes.length < 6) {
+            const symbols = ['♪', '♫', '♬', '♩'];
+            this.floatingNotes.push({
+                x: 0.26,
+                y: 0.56 + (Math.random() - 0.5) * 0.1,
+                vx: 0.09 + Math.random() * 0.05,
+                vy: (Math.random() - 0.5) * 0.06,
+                symbol: symbols[Math.floor(Math.random() * symbols.length)],
+                phase: Math.random() * Math.PI * 2
+            });
+        }
+
+        for (let i = this.floatingNotes.length - 1; i >= 0; i--) {
+            const n = this.floatingNotes[i];
+            n.x += n.vx * dt;
+            n.y += Math.sin(this.animTime * 3 + n.phase) * 0.04 * dt + n.vy * dt;
+
+            // თუ ნოტმა მიაღწია ქეთომდე, ავტომატურადაც ოდნავ ათბობს გულს
+            if (Math.hypot(n.x - 0.72, n.y - 0.58) < 0.07) {
+                this.spawnBurst(0.72, 0.58, '#c59b27', 8);
+                this.memoryMeter = Math.min(100, this.memoryMeter + 2);
+                this.checkCh3Completion();
+                this.floatingNotes.splice(i, 1);
+            } else if (n.x > 0.95) {
+                this.floatingNotes.splice(i, 1);
+            }
+        }
+    }
+
+    spawnBurst(nx, ny, color, count) {
+        for (let i = 0; i < count; i++) {
+            const angle = (Math.PI * 2 * i) / count + Math.random() * 0.4;
+            const speed = 0.05 + Math.random() * 0.14;
+            this.particles.push({
+                x: nx,
+                y: ny,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                life: 0.6 + Math.random() * 0.4,
+                color
+            });
+        }
+    }
+
+    // =========================================================================
+    // ხატვის ფუნქციები (იაკობ გოგებაშვილის წიგნის ილუსტრაციის სტილი)
+    // =========================================================================
+    render() {
+        const ctx = this.ctx;
+        const w = this.width;
+        const h = this.height;
+
+        ctx.clearRect(0, 0, w, h);
+
+        if (this.state === 'PROLOGUE' || this.state === 'CH1') {
+            this.drawKakhetiScene(ctx, w, h);
+            if (this.state === 'CH1') this.drawChapter1Entities(ctx, w, h);
+        } else if (this.state === 'CH2') {
+            this.drawCaucasusScene(ctx, w, h);
+            this.drawChapter2Entities(ctx, w, h);
+        } else if (this.state === 'CH3' || this.state === 'EPILOGUE') {
+            this.drawDagestanScene(ctx, w, h);
+            this.drawChapter3Entities(ctx, w, h);
+        }
+
+        // ნაწილაკების ხატვა
+        for (const p of this.particles) {
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, p.life);
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x * w, p.y * h, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+        }
+
+        // წიგნის ილუსტრაციის შიდა ჩარჩო და ვინიეტი
+        this.drawBookVignette(ctx, w, h);
+    }
+
+    // --- სცენა 1: მზიანი კახეთი, სოფელი ვაშლობანი ---
+    drawKakhetiScene(ctx, w, h) {
+        // თბილი ოქროსფერ-ცისფერი ცა
+        const skyGrad = ctx.createLinearGradient(0, 0, 0, h * 0.55);
+        skyGrad.addColorStop(0, '#d8e6df');
+        skyGrad.addColorStop(1, '#f5e6c8');
+        ctx.fillStyle = skyGrad;
+        ctx.fillRect(0, 0, w, h);
+
+        // მზე
+        ctx.fillStyle = 'rgba(235, 179, 52, 0.35)';
+        ctx.beginPath();
+        ctx.arc(w * 0.82, h * 0.18, 45, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#e5a93b';
+        ctx.beginPath();
+        ctx.arc(w * 0.82, h * 0.18, 26, 0, Math.PI * 2);
+        ctx.fill();
+
+        // კავკასიონის შორეული ქედი
+        ctx.fillStyle = '#9db0b8';
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.42);
+        ctx.lineTo(w * 0.18, h * 0.24);
+        ctx.lineTo(w * 0.36, h * 0.38);
+        ctx.lineTo(w * 0.55, h * 0.20);
+        ctx.lineTo(w * 0.76, h * 0.36);
+        ctx.lineTo(w * 0.92, h * 0.26);
+        ctx.lineTo(w, h * 0.38);
+        ctx.lineTo(w, h * 0.45);
+        ctx.lineTo(0, h * 0.45);
+        ctx.closePath();
+        ctx.fill();
+
+        // ალაზნის ველის მწვანე ბორცვები
+        ctx.fillStyle = '#8aa86e';
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.42);
+        ctx.quadraticCurveTo(w * 0.35, h * 0.34, w * 0.7, h * 0.43);
+        ctx.quadraticCurveTo(w * 0.88, h * 0.46, w, h * 0.40);
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fill();
+
+        // ეზოს მდელო
+        const grassGrad = ctx.createLinearGradient(0, h * 0.45, 0, h);
+        grassGrad.addColorStop(0, '#9cb878');
+        grassGrad.addColorStop(1, '#6f8f4e');
+        ctx.fillStyle = grassGrad;
+        ctx.fillRect(0, h * 0.45, w, h * 0.55);
+
+        // ქართული ოდა-სახლი აივნით (მარცხნივ)
+        this.drawGeorgianHouse(ctx, w * 0.08, h * 0.29, w * 0.22, h * 0.22);
+
+        // ბროწეულისა და ვაშლის ხეები
+        this.drawFruitTree(ctx, w * 0.88, h * 0.46, '#8e1e20'); // ბროწეული
+        this.drawFruitTree(ctx, w * 0.42, h * 0.43, '#c83e37'); // ვაშლი
+    }
+
+    drawGeorgianHouse(ctx, x, y, w, h) {
+        // კედელი
+        ctx.fillStyle = '#efe2c6';
+        ctx.strokeStyle = '#4a2e18';
+        ctx.lineWidth = 2;
+        ctx.fillRect(x, y + h * 0.3, w, h * 0.7);
+        ctx.strokeRect(x, y + h * 0.3, w, h * 0.7);
+
+        // კრამიტის სახურავი
+        ctx.fillStyle = '#9c3d28';
+        ctx.beginPath();
+        ctx.moveTo(x - w * 0.08, y + h * 0.32);
+        ctx.lineTo(x + w * 0.5, y);
+        ctx.lineTo(x + w * 1.08, y + h * 0.32);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // ხის ჩუქურთმიანი აივანი
+        ctx.fillStyle = '#6b4226';
+        ctx.fillRect(x + w * 0.08, y + h * 0.62, w * 0.84, h * 0.38);
+        ctx.strokeStyle = '#d9b25f';
+        ctx.lineWidth = 1.5;
+        for (let i = 1; i <= 5; i++) {
+            const px = x + (w * 0.84 / 6) * i + w * 0.08;
+            ctx.beginPath();
+            ctx.moveTo(px, y + h * 0.32);
+            ctx.lineTo(px, y + h * 0.62);
+            ctx.stroke();
+        }
+    }
+
+    drawFruitTree(ctx, x, y, fruitColor) {
+        // ტანი
+        ctx.fillStyle = '#5c3a21';
+        ctx.fillRect(x - 6, y - 35, 12, 42);
+        // ვარჯი
+        ctx.fillStyle = '#4d7338';
+        ctx.beginPath();
+        ctx.arc(x, y - 50, 34, 0, Math.PI * 2);
+        ctx.arc(x - 22, y - 40, 24, 0, Math.PI * 2);
+        ctx.arc(x + 22, y - 40, 24, 0, Math.PI * 2);
+        ctx.fill();
+        // ნაყოფი
+        ctx.fillStyle = fruitColor;
+        [[-14, -48], [12, -55], [0, -35], [-20, -36], [18, -38]].forEach(([fx, fy]) => {
+            ctx.beginPath();
+            ctx.arc(x + fx, y + fy, 4.5, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    }
+
+    drawChapter1Entities(ctx, w, h) {
+        // შესაგროვებელი ყვავილები და სიტყვები
+        for (const item of this.items) {
+            if (item.collected) continue;
+            const ix = item.x * w;
+            const iy = item.y * h + Math.sin(this.animTime * 3 + item.bobOffset) * 5;
+
+            // ოქროსფერი ნათება
+            ctx.fillStyle = 'rgba(255, 243, 196, 0.75)';
+            ctx.beginPath();
+            ctx.arc(ix, iy, 22, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#c59b27';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // სიმბოლო
+            ctx.font = '20px serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(item.icon, ix, iy);
+
+            // სიტყვის წარწერა
+            ctx.font = 'bold 13px "Noto Serif Georgian", serif';
+            ctx.fillStyle = '#3a2312';
+            ctx.fillText(item.word, ix, iy + 30);
+        }
+
+        // პატარა ქეთო
+        this.drawKetoCharacter(ctx, this.player.x * w, this.player.y * h, false);
+    }
+
+    // --- სცენა 2: კავკასიონის ციცაბო მთები და ბინდი ---
+    drawCaucasusScene(ctx, w, h) {
+        const grad = ctx.createLinearGradient(0, 0, 0, h);
+        grad.addColorStop(0, '#3e4c59');
+        grad.addColorStop(0.5, '#616e7c');
+        grad.addColorStop(1, '#323f4b');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+
+        // ციცაბო კლდეები
+        ctx.fillStyle = '#27303f';
+        ctx.beginPath();
+        ctx.moveTo(0, h * 0.45);
+        ctx.lineTo(w * 0.25, h * 0.14);
+        ctx.lineTo(w * 0.48, h * 0.38);
+        ctx.lineTo(w * 0.72, h * 0.12);
+        ctx.lineTo(w, h * 0.42);
+        ctx.lineTo(w, h);
+        ctx.lineTo(0, h);
+        ctx.closePath();
+        ctx.fill();
+
+        // თოვლიანი მწვერვალები
+        ctx.fillStyle = '#cbd2d9';
+        ctx.beginPath();
+        ctx.moveTo(w * 0.25, h * 0.14);
+        ctx.lineTo(w * 0.19, h * 0.23);
+        ctx.lineTo(w * 0.31, h * 0.23);
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.moveTo(w * 0.72, h * 0.12);
+        ctx.lineTo(w * 0.65, h * 0.22);
+        ctx.lineTo(w * 0.79, h * 0.22);
+        ctx.closePath();
+        ctx.fill();
+
+        // მთის ბილიკი
+        ctx.fillStyle = '#52606d';
+        ctx.fillRect(0, h * 0.45, w, h * 0.55);
+    }
+
+    drawChapter2Entities(ctx, w, h) {
+        // გაფრენილი და ნისლში გაფანტული სიტყვები
+        for (const item of this.items) {
+            if (!item.active || item.faded) continue;
+            const ix = item.x * w;
+            const iy = item.y * h;
+
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, item.alpha);
+            ctx.fillStyle = 'rgba(247, 238, 220, 0.85)';
+            ctx.beginPath();
+            ctx.arc(ix, iy, 28, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#cbd2d9';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.font = 'bold 13px "Noto Serif Georgian", serif';
+            ctx.fillStyle = '#3a2312';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(item.word, ix, iy);
+            ctx.restore();
+        }
+
+        // მდევრების ჩრდილები (ნაბადი და ფაფახი)
+        for (const enemy of this.enemies) {
+            const ex = enemy.x * w;
+            const ey = enemy.y * h;
+            ctx.fillStyle = '#1f2933';
+            // ნაბადი
+            ctx.beginPath();
+            ctx.moveTo(ex, ey - 22);
+            ctx.lineTo(ex - 20, ey + 24);
+            ctx.lineTo(ex + 20, ey + 24);
+            ctx.closePath();
+            ctx.fill();
+            // ფაფახი
+            ctx.beginPath();
+            ctx.arc(ex, ey - 24, 11, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        // პატარა ქეთო
+        this.drawKetoCharacter(ctx, this.player.x * w, this.player.y * h, false);
+    }
+
+    // --- სცენა 3: დაღესტანი, სოფელი ჩოხი (ემოციური კულმინაცია) ---
+    drawDagestanScene(ctx, w, h) {
+        // თბილი სანთლისა და მთის საღამოს ატმოსფერო
+        const progress = this.memoryMeter / 100;
+        const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+        bgGrad.addColorStop(0, progress > 0.7 ? '#7c5338' : '#3d3530');
+        bgGrad.addColorStop(1, progress > 0.7 ? '#d9b27c' : '#6e5c4f');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, w, h);
+
+        // ქვის კედელი და ფანჯარა, საიდანაც კავკასიონის მთვარე ანათებს
+        ctx.fillStyle = '#e8d8be';
+        ctx.fillRect(w * 0.42, h * 0.14, w * 0.16, h * 0.24);
+        ctx.strokeStyle = '#3a2312';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(w * 0.42, h * 0.14, w * 0.16, h * 0.24);
+
+        // იატაკი (ხალიჩა)
+        ctx.fillStyle = '#7a2e2b';
+        ctx.fillRect(0, h * 0.68, w, h * 0.32);
+        ctx.strokeStyle = '#d9b25f';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(w * 0.08, h * 0.72, w * 0.84, h * 0.22);
+
+        // დედა მაგდანა (მარცხნივ, მღერის იავნანას)
+        this.drawMagdanaCharacter(ctx, w * 0.24, h * 0.62);
+
+        // გაზრდილი ქეთო (მარჯვნივ, უსმენს და თანდათან იხსენებს)
+        const ketoX = this.state === 'EPILOGUE' ? w * 0.36 : w * 0.72;
+        this.drawKetoCharacter(ctx, ketoX, h * 0.62, true);
+    }
+
+    drawChapter3Entities(ctx, w, h) {
+        // ხმის ტალღები მაგდანადან ქეთოსკენ
+        ctx.save();
+        ctx.strokeStyle = 'rgba(217, 178, 95, 0.35)';
+        ctx.lineWidth = 2;
+        for (let r = 1; r <= 3; r++) {
+            const radius = ((this.animTime * 45 + r * 40) % 160) + 20;
+            ctx.beginPath();
+            ctx.arc(w * 0.26, h * 0.54, radius, -0.5, 0.5);
+            ctx.stroke();
+        }
+        ctx.restore();
+
+        // მანათობელი მუსიკალური ნოტები
+        for (const n of this.floatingNotes) {
+            const nx = n.x * w;
+            const ny = n.y * h;
+
+            ctx.fillStyle = 'rgba(255, 248, 225, 0.9)';
+            ctx.beginPath();
+            ctx.arc(nx, ny, 20, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#8e1e20';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.font = 'bold 20px serif';
+            ctx.fillStyle = '#8e1e20';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(n.symbol, nx, ny);
+        }
+
+        // მეხსიერების გულის ინდიკატორი ქეთოს თავზე
+        const kx = (this.state === 'EPILOGUE' ? 0.36 : 0.72) * w;
+        const ky = h * 0.36;
+        ctx.font = 'bold 14px "Noto Serif Georgian", serif';
+        ctx.fillStyle = '#fff8eb';
+        ctx.textAlign = 'center';
+        ctx.fillText(`გულის გამოღვიძება: ${Math.round(this.memoryMeter)}%`, kx, ky);
+    }
+
+    // --- პერსონაჟების ხატვა ---
+    drawKetoCharacter(ctx, x, y, isAdult) {
+        const scale = isAdult ? 1.25 : 1.0;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.scale(scale, scale);
+
+        // ქართული კაბა
+        ctx.fillStyle = isAdult ? '#4a5568' : '#8e1e20';
+        ctx.beginPath();
+        ctx.moveTo(0, -10);
+        ctx.lineTo(-15, 22);
+        ctx.lineTo(15, 22);
+        ctx.closePath();
+        ctx.fill();
+
+        // ოქროსფერი გულისპირი
+        ctx.fillStyle = '#f7eedc';
+        ctx.beginPath();
+        ctx.moveTo(0, -8);
+        ctx.lineTo(-5, 10);
+        ctx.lineTo(5, 10);
+        ctx.closePath();
+        ctx.fill();
+
+        // თავი
+        ctx.fillStyle = '#f5d0b5';
+        ctx.beginPath();
+        ctx.arc(0, -18, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        // ნაწნავები
+        ctx.strokeStyle = '#2d1a0e';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(-8, -18);
+        ctx.lineTo(-12, 2);
+        ctx.moveTo(8, -18);
+        ctx.lineTo(12, 2);
+        ctx.stroke();
+
+        // ჩიხტიკოპი / თავსაბურავი
+        ctx.fillStyle = isAdult ? '#cbd5e1' : '#c59b27';
+        ctx.fillRect(-9, -27, 18, 4);
+
+        ctx.restore();
+    }
+
+    drawMagdanaCharacter(ctx, x, y) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.scale(1.25, 1.25);
+
+        // დედა მაგდანას მუქი შინდისფერი ქართული კაბა
+        ctx.fillStyle = '#5c191b';
+        ctx.beginPath();
+        ctx.moveTo(0, -10);
+        ctx.lineTo(-17, 24);
+        ctx.lineTo(17, 24);
+        ctx.closePath();
+        ctx.fill();
+
+        // თავი და თეთრი ლეჩაქი
+        ctx.fillStyle = '#f5d0b5';
+        ctx.beginPath();
+        ctx.arc(0, -18, 10, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = '#fffaf0';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(0, -18, 11, Math.PI * 0.85, Math.PI * 2.15);
+        ctx.stroke();
+
+        ctx.restore();
+    }
+
+    drawBookVignette(ctx, w, h) {
+        const grad = ctx.createRadialGradient(w / 2, h / 2, w * 0.35, w / 2, h / 2, w * 0.65);
+        grad.addColorStop(0, 'rgba(0,0,0,0)');
+        grad.addColorStop(1, 'rgba(42, 22, 8, 0.32)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+    }
+
+    // =========================================================================
+    // მთავარი ციკლი
+    // =========================================================================
+    start() {
+        const loop = (timestamp) => {
+            if (!this.lastTime) this.lastTime = timestamp;
+            const dt = Math.min((timestamp - this.lastTime) / 1000, 0.1);
+            this.lastTime = timestamp;
+
+            this.update(dt);
+            this.render();
+            requestAnimationFrame(loop);
+        };
+        requestAnimationFrame(loop);
+    }
+}
+
+// თამაშის გაშვება გვერდის ჩატვირთვისთანავე
+window.onload = function () {
+    const game = new IavnanaGame();
+    game.start();
+};
+</script>
+
+</body>
+</html>
